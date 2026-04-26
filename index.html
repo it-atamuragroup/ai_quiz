@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATAMURA GROUP — Опрос: внедрение ИИ</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    padding:24px 16px;
+    font-family:'Segoe UI','Helvetica Neue',Arial,sans-serif;
+    background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);
+  }
+
+  .card{
+    width:100%;max-width:600px;
+    background:#fff;border-radius:20px;
+    padding:36px 32px 28px;
+    box-shadow:0 25px 60px rgba(0,0,0,.15);
+  }
+  @media(max-width:480px){.card{padding:28px 18px 20px;border-radius:16px}}
+
+  .logo{font-size:12px;font-weight:600;color:#6366f1;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+  h1{font-size:22px;font-weight:700;color:#0f172a;letter-spacing:-.02em}
+  .sub{font-size:13px;color:#64748b;margin-top:6px;line-height:1.4}
+
+  .prog-wrap{display:flex;align-items:center;gap:12px;margin:24px 0 28px}
+  .prog-bar{flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden}
+  .prog-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#6366f1);border-radius:3px;transition:width .4s ease}
+  .prog-label{font-size:12px;color:#94a3b8;font-weight:600;white-space:nowrap}
+
+  .body{min-height:240px}
+  .q-title{font-size:17px;font-weight:600;color:#0f172a;margin-bottom:6px}
+  .hint{font-size:13px;color:#94a3b8;margin-bottom:16px}
+  label.field{display:block;font-size:13px;font-weight:500;color:#475569;margin:14px 0 4px}
+  input[type=text],textarea{
+    width:100%;padding:10px 14px;font-size:14px;
+    border:1.5px solid #e2e8f0;border-radius:10px;outline:none;
+    color:#0f172a;background:#f8fafc;font-family:inherit;transition:border-color .2s;
+  }
+  input[type=text]:focus,textarea:focus{border-color:#6366f1}
+  textarea{resize:vertical}
+  select{
+    width:100%;padding:10px 14px;font-size:14px;
+    border:1.5px solid #e2e8f0;border-radius:10px;outline:none;
+    color:#0f172a;background:#f8fafc;font-family:inherit;
+    transition:border-color .2s;appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' fill='none' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;
+    cursor:pointer;
+  }
+  select:focus{border-color:#6366f1}
+
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .chip{
+    padding:7px 14px;font-size:13px;border-radius:20px;
+    border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;
+    cursor:pointer;font-weight:500;transition:all .2s;user-select:none;
+  }
+  .chip:hover{border-color:#c7d2fe}
+  .chip.on{border-color:#6366f1;background:#eef2ff;color:#4338ca;font-weight:600}
+
+  .scale-row{display:flex;gap:12px;margin-top:20px;justify-content:center}
+  .scale-btn{
+    width:54px;height:54px;border-radius:14px;
+    border:1.5px solid #e2e8f0;background:#f8fafc;
+    font-size:20px;font-weight:600;color:#475569;
+    cursor:pointer;transition:all .2s;
+  }
+  .scale-btn:hover{border-color:#c7d2fe}
+  .scale-btn.on{border:2px solid #6366f1;background:#eef2ff;color:#4338ca;font-weight:700;transform:scale(1.08)}
+  .scale-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:#94a3b8;padding:0 4px}
+
+  .ex-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  @media(max-width:480px){.ex-grid{grid-template-columns:1fr}}
+  .ex-card{display:flex;flex-direction:column;gap:2px;padding:10px 12px;background:#f1f5f9;border-radius:10px}
+  .ex-dir{font-size:12px;font-weight:600;color:#4338ca}
+  .ex-text{font-size:12px;color:#64748b;line-height:1.3}
+
+  .yn-row{display:flex;gap:12px;margin-top:20px}
+  .yn{
+    flex:1;padding:16px;border-radius:14px;
+    border:1.5px solid #e2e8f0;background:#f8fafc;
+    font-size:15px;font-weight:500;color:#475569;
+    cursor:pointer;transition:all .2s;text-align:center;
+  }
+  .yn:hover{border-color:#c7d2fe}
+  .yn.yes-on{border:2px solid #22c55e;background:#f0fdf4;color:#15803d;font-weight:600}
+  .yn.no-on{border:2px solid #f97316;background:#fff7ed;color:#c2410c;font-weight:600}
+
+  .nav{display:flex;align-items:center;margin-top:28px;padding-top:20px;border-top:1px solid #f1f5f9}
+  .btn-back{padding:10px 20px;font-size:14px;border-radius:10px;border:none;background:transparent;color:#64748b;cursor:pointer;font-weight:500}
+  .btn-next{
+    padding:10px 28px;font-size:14px;border-radius:10px;border:none;
+    background:linear-gradient(135deg,#3b82f6,#6366f1);color:#fff;
+    cursor:pointer;font-weight:600;box-shadow:0 4px 12px rgba(99,102,241,.3);margin-left:auto;
+  }
+  .btn-next:disabled{background:#e2e8f0;color:#94a3b8;cursor:not-allowed;box-shadow:none}
+  .btn-submit{
+    padding:10px 28px;font-size:14px;border-radius:10px;border:none;
+    background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;
+    cursor:pointer;font-weight:600;box-shadow:0 4px 12px rgba(34,197,94,.3);margin-left:auto;
+  }
+
+  .done-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+  .done-title{font-size:22px;font-weight:700;color:#0f172a;text-align:center}
+  .done-text{font-size:14px;color:#64748b;text-align:center;line-height:1.5;margin-top:10px}
+  .btn-retry{display:block;margin:20px auto 0;padding:10px 24px;font-size:14px;border-radius:10px;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;font-weight:500}
+
+  .error-icon{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px}
+
+  .overlay{
+    display:none;position:fixed;inset:0;background:rgba(15,23,42,.6);
+    z-index:100;align-items:center;justify-content:center;
+  }
+  .overlay.show{display:flex}
+  .overlay-box{
+    background:#fff;border-radius:16px;padding:32px 40px;text-align:center;
+    box-shadow:0 20px 50px rgba(0,0,0,.2);
+  }
+  .spinner{width:40px;height:40px;border:4px solid #e2e8f0;border-top-color:#6366f1;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .step{display:none}
+  .step.active{display:block}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">Atamura Group</div>
+  <h1>Опрос: внедрение ИИ</h1>
+  <p class="sub">Помогите определить, где ИИ принесёт максимальную пользу компании</p>
+
+  <div class="prog-wrap" id="progWrap">
+    <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+    <span class="prog-label" id="progLabel"></span>
+  </div>
+
+  <div class="body">
+
+    <!-- STEP 0: О себе -->
+    <div class="step active" data-step="0">
+      <h3 class="q-title">Расскажите о себе</h3>
+      <label class="field">ФИО</label>
+      <input type="text" id="f_name" placeholder="Иванов Иван Иванович">
+      <label class="field">Должность</label>
+      <input type="text" id="f_pos" placeholder="Менеджер по продажам">
+      <label class="field">Отдел / подразделение</label>
+      <select id="f_dept" onchange="data.dept=this.value;checkNav()">
+        <option value="">— Выберите отдел —</option>
+      </select>
+    </div>
+
+    <!-- STEP 1: Уровень ИИ -->
+    <div class="step" data-step="1">
+      <h3 class="q-title">Ваш уровень знакомства с ИИ?</h3>
+      <p class="hint">1 — не использовал, 5 — использую регулярно</p>
+      <div class="scale-row" id="scaleRow"></div>
+      <div class="scale-labels"><span>Не использовал</span><span>Регулярно</span></div>
+    </div>
+
+    <!-- STEP 2: Рутина -->
+    <div class="step" data-step="2">
+      <h3 class="q-title">Какие задачи отнимают больше всего времени?</h3>
+      <p class="hint">Опишите рутинные, повторяющиеся задачи — то, что «съедает» ваш день</p>
+      <textarea id="f_routine" rows="4" placeholder="Например: ручной сбор данных из Profitbase, подготовка еженедельных отчётов по продажам, заполнение таблиц в Bitrix24..."></textarea>
+    </div>
+
+    <!-- STEP 3: Идеи + примеры -->
+    <div class="step" data-step="3">
+      <h3 class="q-title">Что из вашей работы мог бы делать ИИ?</h3>
+      <p class="hint">Примеры по направлениям Atamura Group:</p>
+      <div class="ex-grid" id="exGrid"></div>
+      <textarea id="f_ideas" rows="4" placeholder="Ваши идеи..." style="margin-top:16px"></textarea>
+    </div>
+
+    <!-- STEP 4: Приоритеты -->
+    <div class="step" data-step="4">
+      <h3 class="q-title">Какие направления в приоритете для ИИ?</h3>
+      <p class="hint">Выберите одно или несколько</p>
+      <div class="chips" id="prioChips"></div>
+    </div>
+
+    <!-- STEP 5: Готовность -->
+    <div class="step" data-step="5">
+      <h3 class="q-title">Готовы лично тестировать ИИ-инструменты?</h3>
+      <p class="hint">Мы ищем «первопроходцев» в каждом подразделении</p>
+      <div class="yn-row">
+        <button class="yn" data-val="yes" onclick="pickYN(this)">Да, готов(а)</button>
+        <button class="yn" data-val="no" onclick="pickYN(this)">Пока нет</button>
+      </div>
+    </div>
+
+    <!-- STEP 6: Доп. идеи -->
+    <div class="step" data-step="6">
+      <h3 class="q-title">Ещё идеи или пожелания?</h3>
+      <p class="hint">Необязательный вопрос — но будем рады любым мыслям</p>
+      <textarea id="f_extra" rows="4" placeholder="Любые мысли, предложения..."></textarea>
+    </div>
+
+    <!-- DONE -->
+    <div class="step" data-step="done">
+      <div class="done-icon">✓</div>
+      <h2 class="done-title">Спасибо за ответы!</h2>
+      <p class="done-text">Ваши данные успешно отправлены в таблицу.<br>Результаты опроса будут представлены руководству.</p>
+      <button class="btn-retry" onclick="resetSurvey()">Пройти заново</button>
+    </div>
+
+    <!-- ERROR -->
+    <div class="step" data-step="error">
+      <div class="error-icon">✕</div>
+      <h2 class="done-title">Ошибка отправки</h2>
+      <p class="done-text" id="errorMsg">Не удалось отправить данные. Проверьте интернет-соединение и попробуйте ещё раз.</p>
+      <button class="btn-retry" onclick="retrySubmit()">Попробовать снова</button>
+    </div>
+  </div>
+
+  <div class="nav" id="navRow">
+    <button class="btn-back" id="btnBack" onclick="go(-1)" style="visibility:hidden">← Назад</button>
+    <button class="btn-next" id="btnNext" onclick="go(1)">Далее →</button>
+  </div>
+</div>
+
+<!-- Loading overlay -->
+<div class="overlay" id="overlay">
+  <div class="overlay-box">
+    <div class="spinner"></div>
+    <p style="font-size:14px;color:#475569;font-weight:500">Отправляем ответы...</p>
+  </div>
+</div>
+
+<script>
+const TOTAL = 7;
+let cur = 0;
+
+// Отделы из оргструктуры Atamura Group
+const DEPTS = [
+  "Продажи",
+  "Отдел внешних продаж",
+  "Маркетинг",
+  "Телемаркетинг",
+  "Контроль качества",
+  "Служба заботы",
+  "Клиентский сервис",
+  "Строительство",
+  "ПТО",
+  "Проектирование (Продукт & Дизайн)",
+  "Project Management",
+  "Снабжение",
+  "Логистика",
+  "Энергетика",
+  "ОТ и ТБ",
+  "Безопасность",
+  "Финансы / Бухгалтерия",
+  "Юридический отдел",
+  "HR",
+  "GR",
+  "Сервис",
+  "Производство (завод)",
+  "Бизнес-операции",
+  "Руководство (ГД / УД / ОД / ФД / CCO)",
+  "Другое"
+];
+
+// Направления для приоритизации
+const DIRS = [
+  "Продажи",
+  "Маркетинг и телемаркетинг",
+  "Аналитика и отчётность",
+  "Строительство и ПТО",
+  "Проектирование и дизайн",
+  "Project Management",
+  "Снабжение и логистика",
+  "Финансы и бухгалтерия",
+  "HR и кадры",
+  "Клиентский сервис и служба заботы",
+  "Документооборот",
+  "Производство"
+];
+
+// Примеры ИИ-задач по отделам Atamura Group
+const EX = {
+  "Продажи": "авто-КП, скоринг лидов, анализ воронки Profitbase",
+  "Маркетинг": "генерация текстов и рендеров, таргетинг, аналитика",
+  "Строительство / ПТО": "контроль сроков, сверка смет, фотоотчёты",
+  "Проектирование": "проверка чертежей, генерация концептов",
+  "Финансы": "сверка платежей, прогнозы cash-flow, отчёты",
+  "HR": "скрининг резюме, онбординг, база знаний",
+  "Снабжение": "отслеживание поставок, анализ цен, остатки",
+  "Клиентский сервис": "автоответы, маршрутизация обращений, FAQ-бот"
+};
+
+let data = { dept: "", level: 0, prios: new Set(), ready: null };
+
+function buildChips(container, items, key, multi) {
+  const el = document.getElementById(container);
+  items.forEach(t => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.textContent = t; b.dataset.val = t;
+    b.onclick = () => {
+      if (multi) {
+        data[key].has(t) ? data[key].delete(t) : data[key].add(t);
+        b.classList.toggle("on");
+        b.textContent = data[key].has(t) ? "✓ " + t : t;
+      } else {
+        data[key] = t;
+        el.querySelectorAll(".chip").forEach(c => { c.classList.remove("on"); c.textContent = c.dataset.val; });
+        b.classList.add("on");
+      }
+      checkNav();
+    };
+    el.appendChild(b);
+  });
+}
+
+// Заполняем выпадающий список отделов
+(() => {
+  const sel = document.getElementById("f_dept");
+  DEPTS.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d; opt.textContent = d;
+    sel.appendChild(opt);
+  });
+})();
+
+buildChips("prioChips", DIRS, "prios", true);
+
+// Scale
+(() => {
+  const row = document.getElementById("scaleRow");
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement("button");
+    b.className = "scale-btn"; b.textContent = i;
+    b.onclick = () => {
+      data.level = i;
+      row.querySelectorAll(".scale-btn").forEach(c => c.classList.remove("on"));
+      b.classList.add("on");
+      checkNav();
+    };
+    row.appendChild(b);
+  }
+})();
+
+// Examples
+(() => {
+  const g = document.getElementById("exGrid");
+  Object.entries(EX).forEach(([d, e]) => {
+    const div = document.createElement("div"); div.className = "ex-card";
+    div.innerHTML = `<span class="ex-dir">${d}</span><span class="ex-text">${e}</span>`;
+    g.appendChild(div);
+  });
+})();
+
+function pickYN(btn) {
+  data.ready = btn.dataset.val;
+  btn.parentElement.querySelectorAll(".yn").forEach(b => { b.classList.remove("yes-on", "no-on"); });
+  btn.classList.add(data.ready === "yes" ? "yes-on" : "no-on");
+  checkNav();
+}
+
+function canNext() {
+  if (cur === 0) return document.getElementById("f_name").value.trim() && document.getElementById("f_pos").value.trim() && data.dept;
+  if (cur === 1) return data.level > 0;
+  if (cur === 2) return document.getElementById("f_routine").value.trim();
+  if (cur === 3) return document.getElementById("f_ideas").value.trim();
+  if (cur === 4) return data.prios.size > 0;
+  if (cur === 5) return data.ready !== null;
+  return true;
+}
+
+function checkNav() {
+  document.getElementById("btnNext").disabled = !canNext();
+}
+
+function render() {
+  document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+  const isDone = cur >= TOTAL;
+  if (isDone) {
+    document.querySelector('[data-step="done"]').classList.add("active");
+    document.getElementById("navRow").style.display = "none";
+    document.getElementById("progWrap").style.display = "none";
+    return;
+  }
+  document.querySelector(`[data-step="${cur}"]`).classList.add("active");
+  document.getElementById("navRow").style.display = "flex";
+  document.getElementById("progWrap").style.display = "flex";
+  document.getElementById("progFill").style.width = ((cur + 1) / TOTAL * 100) + "%";
+  document.getElementById("progLabel").textContent = (cur + 1) + " из " + TOTAL;
+  document.getElementById("btnBack").style.visibility = cur > 0 ? "visible" : "hidden";
+  const btn = document.getElementById("btnNext");
+  if (cur === TOTAL - 1) {
+    btn.textContent = "Отправить ✓";
+    btn.className = "btn-submit";
+  } else {
+    btn.textContent = "Далее →";
+    btn.className = "btn-next";
+  }
+  checkNav();
+}
+
+// =====================================================
+// НАСТРОЙКА: Вставьте URL вашего Google Apps Script
+// =====================================================
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyvQ2RNayZrmARobioEcpfp_BejX77DFb4kTNW3FoCtUDffqH0YBiHoFBK32j36D76H/exec";
+
+async function submitToGoogleSheets() {
+  const payload = {
+    timestamp: new Date().toLocaleString("ru-RU"),
+    name: document.getElementById("f_name").value.trim(),
+    position: document.getElementById("f_pos").value.trim(),
+    department: data.dept,
+    aiLevel: data.level,
+    routineTasks: document.getElementById("f_routine").value.trim(),
+    aiIdeas: document.getElementById("f_ideas").value.trim(),
+    priorities: [...data.prios].join(", "),
+    readyToTest: data.ready === "yes" ? "Да" : "Нет",
+    extraIdeas: document.getElementById("f_extra").value.trim()
+  };
+
+  document.getElementById("overlay").classList.add("show");
+
+  try {
+    const res = await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    // no-cors always returns opaque response, so we assume success
+    document.getElementById("overlay").classList.remove("show");
+    cur = TOTAL;
+    render();
+  } catch (err) {
+    document.getElementById("overlay").classList.remove("show");
+    document.getElementById("errorMsg").textContent =
+      "Не удалось отправить данные: " + err.message;
+    document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+    document.querySelector('[data-step="error"]').classList.add("active");
+    document.getElementById("navRow").style.display = "none";
+    document.getElementById("progWrap").style.display = "none";
+  }
+}
+
+function retrySubmit() {
+  submitToGoogleSheets();
+}
+
+function go(dir) {
+  if (dir === 1 && !canNext()) return;
+  if (dir === 1 && cur === TOTAL - 1) {
+    submitToGoogleSheets();
+    return;
+  }
+  cur += dir;
+  if (cur < 0) cur = 0;
+  render();
+}
+
+function resetSurvey() {
+  cur = 0;
+  data = { dept: "", level: 0, prios: new Set(), ready: null };
+  document.getElementById("f_name").value = "";
+  document.getElementById("f_pos").value = "";
+  document.getElementById("f_routine").value = "";
+  document.getElementById("f_ideas").value = "";
+  document.getElementById("f_extra").value = "";
+  document.getElementById("f_dept").selectedIndex = 0;
+  document.querySelectorAll("#prioChips .chip").forEach(c => { c.classList.remove("on"); c.textContent = c.dataset.val; });
+  document.querySelectorAll(".scale-btn").forEach(c => c.classList.remove("on"));
+  document.querySelectorAll(".yn").forEach(c => c.classList.remove("yes-on", "no-on"));
+  render();
+}
+
+["f_name", "f_pos", "f_routine", "f_ideas", "f_extra"].forEach(id => {
+  document.getElementById(id).addEventListener("input", checkNav);
+});
+
+render();
+</script>
+</body>
+</html>
