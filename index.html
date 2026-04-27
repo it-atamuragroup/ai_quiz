@@ -177,15 +177,8 @@
       <textarea id="f_ideas" rows="4" placeholder="Ваши идеи..." style="margin-top:16px"></textarea>
     </div>
 
-    <!-- STEP 4: Приоритеты -->
+    <!-- STEP 4: Готовность -->
     <div class="step" data-step="4">
-      <h3 class="q-title">Какие направления в приоритете для ИИ?</h3>
-      <p class="hint">Выберите одно или несколько</p>
-      <div class="chips" id="prioChips"></div>
-    </div>
-
-    <!-- STEP 5: Готовность -->
-    <div class="step" data-step="5">
       <h3 class="q-title">Готовы лично тестировать ИИ-инструменты?</h3>
       <p class="hint">Мы ищем «первопроходцев» в каждом подразделении</p>
       <div class="yn-row">
@@ -194,8 +187,8 @@
       </div>
     </div>
 
-    <!-- STEP 6: Доп. идеи -->
-    <div class="step" data-step="6">
+    <!-- STEP 5: Доп. идеи -->
+    <div class="step" data-step="5">
       <h3 class="q-title">Ещё идеи или пожелания?</h3>
       <p class="hint">Необязательный вопрос — но будем рады любым мыслям</p>
       <textarea id="f_extra" rows="4" placeholder="Любые мысли, предложения..."></textarea>
@@ -233,7 +226,7 @@
 </div>
 
 <script>
-const TOTAL = 7;
+const TOTAL = 6;
 let cur = 0;
 
 // Отделы из оргструктуры Atamura Group
@@ -265,22 +258,6 @@ const DEPTS = [
   "Другое"
 ];
 
-// Направления для приоритизации
-const DIRS = [
-  "Продажи",
-  "Маркетинг и телемаркетинг",
-  "Аналитика и отчётность",
-  "Строительство и ПТО",
-  "Проектирование и дизайн",
-  "Project Management",
-  "Снабжение и логистика",
-  "Финансы и бухгалтерия",
-  "HR и кадры",
-  "Клиентский сервис и служба заботы",
-  "Документооборот",
-  "Производство"
-];
-
 // Примеры ИИ-задач по отделам Atamura Group
 const EX = {
   "Продажи": "авто-КП, скоринг лидов, анализ воронки Profitbase",
@@ -293,7 +270,7 @@ const EX = {
   "Клиентский сервис": "автоответы, маршрутизация обращений, FAQ-бот"
 };
 
-let data = { dept: "", level: 0, prios: new Set(), ready: null };
+let data = { dept: "", level: 0, ready: null };
 
 function buildChips(container, items, key, multi) {
   const el = document.getElementById(container);
@@ -325,8 +302,6 @@ function buildChips(container, items, key, multi) {
     sel.appendChild(opt);
   });
 })();
-
-buildChips("prioChips", DIRS, "prios", true);
 
 // Scale
 (() => {
@@ -366,8 +341,7 @@ function canNext() {
   if (cur === 1) return data.level > 0;
   if (cur === 2) return document.getElementById("f_routine").value.trim();
   if (cur === 3) return document.getElementById("f_ideas").value.trim();
-  if (cur === 4) return data.prios.size > 0;
-  if (cur === 5) return data.ready !== null;
+  if (cur === 4) return data.ready !== null;
   return true;
 }
 
@@ -415,7 +389,7 @@ async function submitToGoogleSheets() {
     aiLevel: data.level,
     routineTasks: document.getElementById("f_routine").value.trim(),
     aiIdeas: document.getElementById("f_ideas").value.trim(),
-    priorities: [...data.prios].join(", "),
+    priorities: "",
     readyToTest: data.ready === "yes" ? "Да" : "Нет",
     extraIdeas: document.getElementById("f_extra").value.trim()
   };
@@ -461,14 +435,13 @@ function go(dir) {
 
 function resetSurvey() {
   cur = 0;
-  data = { dept: "", level: 0, prios: new Set(), ready: null };
+  data = { dept: "", level: 0, ready: null };
   document.getElementById("f_name").value = "";
   document.getElementById("f_pos").value = "";
   document.getElementById("f_routine").value = "";
   document.getElementById("f_ideas").value = "";
   document.getElementById("f_extra").value = "";
   document.getElementById("f_dept").selectedIndex = 0;
-  document.querySelectorAll("#prioChips .chip").forEach(c => { c.classList.remove("on"); c.textContent = c.dataset.val; });
   document.querySelectorAll(".scale-btn").forEach(c => c.classList.remove("on"));
   document.querySelectorAll(".yn").forEach(c => c.classList.remove("yes-on", "no-on"));
   render();
